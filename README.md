@@ -6,7 +6,7 @@ Currently, this only supports articles found on ArcXiv.
 
 ### Usage
 
-Find this project live [here](https://litrev.kojinglick.com/)
+Find this project live [here](https://litrev.moonstripe.com/)
 
 You can also use this locally. 
 
