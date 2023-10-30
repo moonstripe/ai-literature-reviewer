@@ -37,6 +37,9 @@ export default function TopicInput({ relevantSources, angle }: TopicInputProps) 
             angle,
             maxResults,
           }),
+          headers: {
+            "x-deno-timeout-ms": "600000"
+          }
         });
 
         const json = await response.json();
