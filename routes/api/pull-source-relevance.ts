@@ -25,7 +25,7 @@ export const handler: Handlers = {
 
     // pull results from arcXiv
     const arcXivResponse = await fetch(
-      `https://export.arxiv.org/api/query?search_query=all:${[topic, angle].join(", ")}&max_results=${maxResults}`,
+      `https://export.arxiv.org/api/query?search_query=all:${topic}&max_results=${maxResults}`,
     );
 
     const arXivText = await arcXivResponse.text();
