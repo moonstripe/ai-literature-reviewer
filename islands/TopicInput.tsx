@@ -72,7 +72,7 @@ export default function TopicInput({ relevantSources, angle }: TopicInputProps) 
         disabled={isLoadingResponse}
         onClick={handleSearch}
       >
-        Search
+        {!isLoadingResponse ? "Search" : <img class="animate-spin text-white m-auto" src="/spinner.svg"></img>}
       </button>
     </div>
   ) : null;

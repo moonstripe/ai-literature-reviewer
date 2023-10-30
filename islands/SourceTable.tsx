@@ -42,8 +42,8 @@ export default function SourceTable({ relevantSources, angle, literatureReviewRe
     return relevantSources.value.length > 0 && literatureReviewResults.value.length === 0 ? (
         <div class="flex flex-col w-full mt-8">
             <div class="flex mb-2">
-                <button onClick={handleSelectAll} class={`px-4 py-2 focus:outline-none rounded-lg ml-auto mr-2 ${isLoadingResponse ? `pointer-events-none	bg-gray-600 text-white` : `bg-black text-white`}`}>Select All</button>
-                <button onClick={handleSubmitSourcePDFLinks} class={`px-4 py-2 focus:outline-none rounded-lg ml-2 mr-0 ${isLoadingResponse ? `pointer-events-none	bg-gray-600 text-white` : `bg-black text-white`}`}>Submit</button>
+                <button onClick={handleSelectAll} class={`px-4 py-2 focus:outline-none rounded-lg ml-auto mr-2 ${isLoadingResponse ? `pointer-events-none	bg-gray-600 text-white` : `bg-black text-white`}`}>{!isLoadingResponse ? "Select All" : <img class="animate-spin text-white m-auto" src="/spinner.svg"></img>}</button>
+                <button onClick={handleSubmitSourcePDFLinks} class={`px-4 py-2 focus:outline-none rounded-lg ml-2 mr-0 ${isLoadingResponse ? `pointer-events-none	bg-gray-600 text-white` : `bg-black text-white`}`}>{!isLoadingResponse ? "Submit" : <img class="animate-spin text-white m-auto" src="/spinner.svg"></img>}</button>
             </div>
             <table class="table-auto">
                 <tr class="rounded-lg bg-black text-white p-2">

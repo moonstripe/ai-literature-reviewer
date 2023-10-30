@@ -43,6 +43,7 @@ export default function SetAPIKey() {
               placeholder="OpenAI API Key"
               value={apiKey}
               onInput={handleChangeAPIKey}
+              name="apiKey"
               class="px-4 py-2 ml-0 mr-2 rounded-lg border-1"
             />
             <button
@@ -54,7 +55,7 @@ export default function SetAPIKey() {
               disabled={isLoadingResponse}
               onClick={handleSendAPIKey}
             >
-              Set
+              {!isLoadingResponse ? "Set" : <img class="animate-spin text-white m-auto" src="/spinner.svg"></img>}
             </button>
           </div>
         </div>
