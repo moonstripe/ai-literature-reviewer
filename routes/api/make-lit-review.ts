@@ -4,9 +4,6 @@ import { RelevantSource, RelevantSourcesWithText } from "../../types.ts";
 
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: Deno.env.get("OPENAI_KEY"),
-});
 
 function getLast1000Words(inputString: string): string {
   // Tokenize the string into words using space as a delimiter.
@@ -23,6 +20,10 @@ function getLast1000Words(inputString: string): string {
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
+
+    const openai = new OpenAI({
+      apiKey: Deno.env.get("OPENAI_KEY"),
+    });
 
     const { sources, angle } = await req.json()
 

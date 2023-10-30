@@ -12,37 +12,14 @@ function removeSpecialCharactersAndPunctuation(inputString: string) {
   return inputString.replace(/[^a-zA-Z0-9\s]/g, '');
 }
 
-async function openAIResponseFromEntry(entry: ArcXivResultEntry, initialMessage: OpenAI.Chat.ChatCompletionMessageParam, finalPrompt: OpenAI.Chat.ChatCompletionMessageParam) {
-
-  const cleanedSummary = removeSpecialCharactersAndPunctuation(entry.summary)
-
-  return await openai.chat.completions.create({
-    messages: [
-      initialMessage,
-      {
-        role: "system",
-        content: `
-        Date Published: ${entry.published}
-        Text Authors: ${Array.isArray(entry.author) ? entry.author.map(author => author.name).join(", ") : entry.author.name}
-        Text Summary: ${cleanedSummary}
-        Text Link: ${Array.isArray(entry.link) ? entry.link.filter(link => link["@title"] === "pdf")[0]["@href"] : entry.link["@href"]}
-        `
-      },
-      finalPrompt
-    ],
-    model: "gpt-3.5-turbo"
-  }
-  )
-}
-
 import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: Deno.env.get("OPENAI_KEY"),
-});
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
+    const openai = new OpenAI({
+      apiKey: Deno.env.get("OPENAI_KEY"),
+    });
+
     // pull topic from response body
     const { topic, angle, maxResults } = await req.json();
 
@@ -65,7 +42,7 @@ export const handler: Handlers = {
       return new Response("No entry returned from ArcXiv", { status: 404 });
     }
 
-    const entries = feed.entry as ArcXivResultEntry[];
+    const entries = feed.entry as ArcXivResultEntry[] | ArcXivResultEntry;
 
     const initialMessage: OpenAI.Chat.ChatCompletionMessageParam = {
       role: 'system',
@@ -77,7 +54,47 @@ export const handler: Handlers = {
     }
 
     const acculumatedResponses = await Promise.all(
-      Array.isArray(entries) ? entries.map(entry => openAIResponseFromEntry(entry, initialMessage, finalPrompt)) : [openAIResponseFromEntry(entries, initialMessage, finalPrompt)]
+      Array.isArray(entries) ? entries.map( async entry => {
+        const cleanedSummary = removeSpecialCharactersAndPunctuation(entry.summary)
+
+        return await openai.chat.completions.create({
+          messages: [
+            initialMessage,
+            {
+              role: "system",
+              content: `
+              Date Published: ${entry.published}
+              Text Authors: ${Array.isArray(entry.author) ? entry.author.map(author => author.name).join(", ") : entry.author.name}
+              Text Summary: ${cleanedSummary}
+              Text Link: ${Array.isArray(entry.link) ? entry.link.filter(link => link["@title"] === "pdf")[0]["@href"] : entry.link["@href"]}
+              `
+            },
+            finalPrompt
+          ],
+          model: "gpt-3.5-turbo"
+        }
+        )
+      }) : [entries].map(async entry => {
+        const cleanedSummary = removeSpecialCharactersAndPunctuation(entry.summary)
+
+        return await openai.chat.completions.create({
+          messages: [
+            initialMessage,
+            {
+              role: "system",
+              content: `
+              Date Published: ${entry.published}
+              Text Authors: ${Array.isArray(entry.author) ? entry.author.map(author => author.name).join(", ") : entry.author.name}
+              Text Summary: ${cleanedSummary}
+              Text Link: ${Array.isArray(entry.link) ? entry.link.filter(link => link["@title"] === "pdf")[0]["@href"] : entry.link["@href"]}
+              `
+            },
+            finalPrompt
+          ],
+          model: "gpt-3.5-turbo"
+        }
+        )
+      })
     )
 
     const returnResponses: RelevantSource[] = []
