@@ -28,20 +28,27 @@ export default function SourceTable(
   const handleSubmitSourcePDFLinks = async () => {
     setIsLoadingResponse(true);
 
-    const response = await fetch("/api/make-lit-review", {
-      method: "POST",
-      body: JSON.stringify({
-        sources: selectedSources.map((index) => relevantSources.value[index]),
-        angle: angle.value,
-      }),
-      headers: {
-        "x-deno-timeout-ms": "600000",
-      },
-    });
+    try {
+        const response = await fetch("/api/make-lit-review", {
+          method: "POST",
+          body: JSON.stringify({
+            sources: selectedSources.map((index) => relevantSources.value[index]),
+            angle: angle.value,
+          }),
+          headers: {
+            "x-deno-timeout-ms": "600000",
+          },
+        });
 
-    const json = await response.json();
+        const json = await response.json();
 
-    literatureReviewResults.value = json.data;
+        literatureReviewResults.value = json.data
+    } catch (error) {
+        console.error(error)
+    }
+
+
+    setIsLoadingResponse(false)
   };
 
   return relevantSources.value.length > 0 &&
