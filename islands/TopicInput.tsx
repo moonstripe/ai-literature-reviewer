@@ -3,7 +3,7 @@ import { TopicInputProps, RelevantSource } from "../types.ts";
 
 export default function TopicInput({ relevantSources, angle }: TopicInputProps) {
   const [topic, setTopic] = useState<string>("");
-  const [maxResults, setMaxResults] = useState<number>(25);
+  const [maxResults, setMaxResults] = useState<number>(5);
   const [isLoadingResponse, setIsLoadingResponse] = useState<boolean>(false);
 
   const handleTopicChange = (e: Event) => {
