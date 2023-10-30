@@ -5,17 +5,17 @@ import { RelevantSource, RelevantSourcesWithText } from "../../types.ts";
 import OpenAI from "openai";
 
 
-function getLast1000Words(inputString: string): string {
+function getLast750Words(inputString: string): string {
   // Tokenize the string into words using space as a delimiter.
   const words = inputString.split(' ');
 
-  // Calculate the starting index for the last 1,000 words.
-  const startIndex = Math.max(words.length - 1000, 0);
+  // Calculate the starting index for the last 750 words.
+  const startIndex = Math.max(words.length - 750, 0);
 
-  // Extract the substring containing the last 1,500 words.
-  const last1000words = words.slice(startIndex).join(' ');
+  // Extract the substring containing the last 750 words.
+  const last750words = words.slice(startIndex).join(' ');
 
-  return last1000words;
+  return last750words;
 }
 
 export const handler: Handlers = {
@@ -43,7 +43,7 @@ export const handler: Handlers = {
 
     await Promise.all(pdfRequests)
 
-    relevantSourcesWithText.map((source) => source.sourceText = getLast1000Words(source.sourceText))
+    relevantSourcesWithText.map((source) => source.sourceText = getLast750Words(source.sourceText))
 
     const initialMessage: OpenAI.Chat.ChatCompletionMessageParam = {
       role: 'system',
